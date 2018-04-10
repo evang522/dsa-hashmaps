@@ -37,7 +37,7 @@ class LinkedList {
       return false;
     }
 
-    if (this.head.value === node) {
+    if (this.head.value.key === node) {
       this.head = this.head.next;    
       return true;
     }
@@ -46,13 +46,12 @@ class LinkedList {
     let previousNode = null;
 
 
-    while ((currentNode !== null) && (currentNode.value !== node)) {
+    while ((currentNode !== null) && (currentNode.value.key !== node)) {
       previousNode = currentNode;
       currentNode=currentNode.next;
     }
 
     if (currentNode === null) {
-      console.log('Item not found');
       return false;
     }
 
@@ -62,25 +61,24 @@ class LinkedList {
 
 
   find(item) {
-    if (this.head === null) {
-      return console.log('Array contains no items');
+    if (this.head === null){
+      return false;
     }
 
-    if (this.head.value === item) {
-      console.log('Found your item: ', item);
-      return;
+    if (this.head.value.key === item) {
+      return item;
     }
 
     let currentNode = this.head;
 
-    while (currentNode.value !== item && currentNode !== null) {
+    while (currentNode.value.key !== item && currentNode !== null) {
       currentNode = currentNode.next;
     }
 
-    if (currentNode.value === item) {
-      console.log('Found your item!: ', item);
+    if (currentNode.value.key === item) {
+      return item;
     } else {
-      console.log('Your item could not be found');
+      return false;
     }
 
   }
@@ -88,7 +86,7 @@ class LinkedList {
   insertBefore(value,valueOfNext) {
     
     if (!this.head) {
-      return console.log('There is no key to insert before');
+      return false;
     }
     let currentNode = this.head;
     let previousNode = this.head;
@@ -158,6 +156,32 @@ class LinkedList {
 
 
 // EXTRA-CLASS FUNCTIONS (non list-specific)
+
+const find = (list, item) => {
+  if (!list.head){
+    return false;
+  }
+
+  if (list.head.value.key === item) {
+    return item;
+  }
+
+  let currentNode = list.head;
+
+  while (currentNode.value.key !== item && currentNode.next !== null) {
+    currentNode = currentNode.next;
+  }
+
+  if (currentNode.value.key === item) {
+    return item;
+  } else {
+    console.log('Your item could not be found');
+    return false;
+  }
+};
+
+
+
 const displayList = (linkedlist) => {
   if (!linkedlist.head) {
     console.log('This list has no items');
@@ -184,7 +208,7 @@ const displayList = (linkedlist) => {
 
 
 class HashMap {
-  constructor(initialCapacity=8) {
+  constructor(initialCapacity=20) {
     this.length = 0;
     this._slots = [];
     this._capacity = initialCapacity;
@@ -192,6 +216,7 @@ class HashMap {
   }
 
   static _hashString(string) {
+    console.log('string being hashed', string);
     let hash = 5381;
     for (let i=0; i<string.length; i++) {
       hash = (hash << 5) + hash + string.charCodeAt(i);
@@ -220,12 +245,12 @@ class HashMap {
     }
 
     const index = this._findSlot(key);
-    console.log(index);
     if (!this._slots[index]) {
       this._slots[index] = new LinkedList();
     }
     
-    if (this._slots[index].find(key)) {
+    console.log(find(this._slots[index], key));
+    if (find(this._slots[index], key)) {
       this._slots[index].remove(key);
       this._slots[index].insertLast({key,value});
       return;
@@ -253,7 +278,6 @@ class HashMap {
 
 
   _resize(size) {
-    console.log('resize was called');
     const oldSlots = this._slots;
     this._capacity = size;
     // Reset the length - it will get rebuilt as you add the items back
@@ -290,6 +314,7 @@ HashMap.SIZE_RATIO = 3;
 
 const display = (hashmap)  => {
   for (let i=0;i<hashmap._slots.length; i++) {
+    console.log('Currently at index: ', i);
     let currentNode = hashmap._slots[i] ? hashmap._slots[i].head : null;
     if (currentNode) {
       while (currentNode !== null) {
@@ -311,7 +336,22 @@ const display = (hashmap)  => {
 function main() {
   const testHash = new HashMap();
   testHash.set('harry','potter');
-  testHash.set('harry','potter');
+  testHash.set('Evan','Garrett');
+  testHash.set('harry','basher');
+  testHash.set('harry','basher');
+  testHash.set('harry1','basher');
+  testHash.set('harr2y','basher');
+  testHash.set('har2ry','basher');
+  testHash.set('har3ry','basher');
+  testHash.set('har5ry','basher');
+  testHash.set('ha6rry','basher');
+  testHash.set('har3ry','basher');
+  testHash.set('har2ry','basher');
+  testHash.set('har2ry','basher');
+  testHash.set('harrry','basher');
+  testHash.set('hawrry','basher');
+  testHash.set('harrry','basher');
+  testHash.set('hsarry','basher');
   display(testHash);
 }
 
